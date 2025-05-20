@@ -1,7 +1,7 @@
 import streamlit as st
 import folium
 from folium import plugins
-from io import BytesIO
+import io
 import base64
 
 # 앱 타이틀
