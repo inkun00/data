@@ -1,8 +1,8 @@
 import streamlit as st
 import folium
-from folium import plugins
-import io
+import os
 import base64
+from io import BytesIO
 
 # 앱 타이틀
 st.title("생태지도 앱")
@@ -23,10 +23,18 @@ def add_marker_on_click(event):
 popup = folium.LatLngPopup()
 m.add_child(popup)
 
-# 지도 표시
-def map_to_html(m):
-    map_html = m._repr_html_()
-    return map_html
+# 지도 HTML로 변환 후 Streamlit에서 표시하는 함수
+def render_map(map_object):
+    # 임시 HTML 파일로 저장
+    map_path = "map.html"
+    map_object.save(map_path)
 
-# 지도 HTML로 변환 후 Streamlit에서 표시
-st.markdown(map_to_html(m), unsafe_allow_html=True)
+    # HTML 파일을 읽어서 Streamlit에서 표시할 수 있도록 변환
+    with open(map_path, "r", encoding="utf-8") as file:
+        map_html = file.read()
+
+    # Streamlit에서 HTML 렌더링
+    st.components.v1.html(map_html, height=600, width=800)
+
+# 지도를 HTML로 저장하고 Streamlit에서 로드
+render_map(m)
